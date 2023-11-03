@@ -36,8 +36,8 @@ const createNewUser = asyncWrapper( async (req,res,next) => {
 
 
 const loginUser = asyncWrapper( async (req,res,next) => {
-    const {email,password} = req.body;
-    if(!email & !password) {
+    const {email,c} = req.body;
+    if(!email || !password) {
       const error = appError.create(400,helper.FAIL,'enter your email and pass');
       return next(error);
     }
@@ -46,8 +46,8 @@ const loginUser = asyncWrapper( async (req,res,next) => {
       const error = appError.create(400,helper.FAIL,'not valid email');
       return next(error);
     }
-    const copmaredPassword = await bcrypt.compare(passowrd,user.password);
-    if (user & copmaredPassword) {
+    const copmaredPassword = await bcrypt.compare(password,user.password);
+    if (copmaredPassword) {
       return res.status(200).json({status:helper.SUCCESS,msg:'you are loged in'});
     }else {
       const error = appError.create(400,helper.FAIL,'wrong password');
